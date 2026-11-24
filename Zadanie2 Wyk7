@@ -1,0 +1,96 @@
+#include <stdio.h>
+
+#define LOW_LIMIT -5
+#define HIGH_LIMIT 20
+
+int main(void)
+{
+    int m, n;
+    double potega;
+
+    do
+    {
+        printf("Podaj m, n: ");
+
+        if (scanf("%d, %d", &m, &n) != 2)
+        {
+            printf("błąd. podaj dwie liczby calkowite.\n");
+
+            int znak;
+            while ((znak = getchar()) != '\n' && znak != EOF)
+            {
+            }
+
+            m = LOW_LIMIT - 1;
+            n = LOW_LIMIT - 1;
+            continue;
+        }
+
+        if (m < LOW_LIMIT || n < m || n > HIGH_LIMIT)
+        {
+            printf("niepoprawne dane ,sprawdź zakres.\n");
+        }
+
+    } while (m < LOW_LIMIT || n < m || n > HIGH_LIMIT);
+
+    printf("\nWersja a\n");
+
+    int i = m;
+    potega = 1.0;
+
+    while (i < 0)
+    {
+        potega /= 2.0;
+        i++;
+    }
+
+    while (i < m)
+    {
+        potega *= 2.0;
+        i++;
+    }
+
+    i = m;
+
+    while (i <= n)
+    {
+        printf("2^%d = %.4f\n", i, potega);
+        potega *= 2.0;
+        i++;
+    }
+
+    printf("\nWersja b\n");
+
+    i = m;
+    potega = 1.0;
+
+    while (i < 0)
+    {
+        potega /= 2.0;
+        i++;
+    }
+
+    do
+    {
+        printf("2^%d = %.4f\n", i, potega);
+        potega *= 2.0;
+        i++;
+    } while (i <= n);
+
+    printf("\nWersja c\n");
+
+    potega = 1.0;
+
+    for (i = 0; i > m; i--)
+    {
+        potega /= 2.0;
+    }
+
+    for (i = m; i <= n; i++)
+    {
+        printf("2^%d = %.4f\n", i, potega);
+        potega *= 2.0;
+    }
+
+    return 0;
+}
