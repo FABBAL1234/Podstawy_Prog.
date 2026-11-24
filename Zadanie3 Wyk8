@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+    long double delta;
+
+    printf("podaj dokladnosc delta: ");
+    scanf("%Lf", &delta);
+
+    if (delta <= 0 || !isfinite(delta))
+    {
+        printf("niepoprawna wartosc delta\n");
+        return 1;
+    }
+
+    long double suma = 1.0L;
+    long double wyraz = 1.0L;
+
+    int iteracje = 0;
+    const int MAX_ITERACJI = 10000;
+
+    while (wyraz >= delta && iteracje < MAX_ITERACJI)
+    {
+        iteracje++;
+
+        wyraz = wyraz / iteracje;
+        suma = suma + wyraz;
+    }
+
+    printf("\nprzyblizenie stalej eulera: %.21Lg\n", suma);
+    printf("liczba iteracji: %d\n", iteracje);
+
+    if (iteracje >= MAX_ITERACJI)
+    {
+        printf("nie osiagnieto dokladnosci\n");
+    }
+    else
+    {
+        printf("osiagnieto dokladnosc.\n");
+    }
+
+    return 0;
+}
