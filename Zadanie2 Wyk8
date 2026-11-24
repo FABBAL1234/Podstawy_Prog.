@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <omp.h>
+
+double calculate_pi_sequential(long long n)
+{
+    double pi = 0.0;
+    double sign = 1.0;
+
+    for (long long i = 0; i < n; i++)
+    {
+        double denominator = 2.0 * i + 1.0;
+
+        pi += sign * (4.0 / denominator);
+
+        sign = -sign;
+    }
+
+    return pi;
+}
+
+double calculate_pi_parallel(long long n)
+{
+    double pi = 0.0;
+
+    #pragma omp parallel for reduction(+:pi)
+    for (long long i = 0; i < n; i++)
+    {
+        double sign;
+
+        if (i % 2 == 0)
+            sign = 1.0;
+        else
+            sign = -1.0;
+
+        double denominator = 2.0 * i + 1.0;
+
+        pi += sign * (4.0 / denominator);
+    }
+
+    return pi;
+}
+
+int main(void)
+{
+    long long n;
+
+    printf("Podaj liczbe iteracji n: ");
+
+    if (scanf("%lld", &n) != 1 || n <= 0)
+    {
+        printf("Nieprawidlowa wartosc!\n");
+        return 1;
+    }
+
+
+    for (int test = 1; test <= 3; test++)
+    {
+        long long iterations = n * test;
+
+        double start = omp_get_wtime();
+
+        double pi_sequential =
+            calculate_pi_sequential(iterations);
+
+        double time_sequential =
+            omp_get_wtime() - start;
+
+
+        start = omp_get_wtime();
+
+        double pi_parallel =
+            calculate_pi_parallel(iterations);
+
+        double time_parallel =
+            omp_get_wtime() - start;
+
+        printf("\n=================================\n");
+        printf("Liczba iteracji: %lld\n", iterations);
+
+        printf("Wersja bazowa:\n");
+        printf("PI = %.15f\n", pi_sequential);
+        printf("Czas: %.6f sekund\n", time_sequential);
+
+        printf("\nWersja OpenMP:\n");
+        printf("PI = %.15f\n", pi_parallel);
+        printf("Czas: %.6f sekund\n", time_parallel);
+
+        if (time_parallel > 0.0)
+        {
+            printf("\nPrzyspieszenie: %.2fx\n",
+                   time_sequential / time_parallel);
+        }
+    }
+
+    printf("\nKoniec programu.\n");
+
+    return 0;
+}
